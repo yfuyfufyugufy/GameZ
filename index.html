@@ -3,67 +3,196 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GameZ Sound Board</title>
+<title>GameZ</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: Arial, sans-serif; background: #0f0f0f; color: white; min-height: 100vh; }
-  header { padding: 2rem 1.5rem 1rem; text-align: center; }
-  header h1 { font-size: 2.5rem; color: #a78bfa; }
-  header p { color: #888; margin-top: 6px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 1.5rem; }
-  .snd-btn { background: #1a1a2e; border: 2px solid #2d2d4e; border-radius: 12px; color: white; padding: 1.2rem 1rem; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 90px; justify-content: center; }
-  .snd-btn:hover { background: #2d2d4e; border-color: #a78bfa; transform: translateY(-2px); }
-  .snd-btn:active { transform: scale(0.96); }
-  .snd-btn.playing { background: #3b1f6e; border-color: #a78bfa; box-shadow: 0 0 12px #a78bfa55; }
-  .snd-btn .emoji { font-size: 26px; }
-  .stop-bar { position: sticky; bottom: 0; background: #0f0f0f; border-top: 1px solid #222; padding: 12px 1.5rem; display: flex; align-items: center; gap: 12px; }
-  .stop-bar span { font-size: 13px; color: #888; flex: 1; }
-  .stop-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid #444; background: #1a1a1a; color: white; font-size: 13px; cursor: pointer; }
-  .stop-btn:hover { background: #2a2a2a; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#fff;color:#111;min-height:100vh}
+.top{padding:2rem 2rem 1rem;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
+.top h1{font-size:1.4rem;font-weight:600;letter-spacing:-0.5px}
+.top p{font-size:13px;color:#888;margin-top:2px}
+.upload-btn{padding:8px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#111;font-weight:500}
+.upload-btn:hover{background:#f5f5f5}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:1.5rem}
+.snd{background:#fff;border:1px solid #eee;border-radius:10px;padding:1rem;cursor:pointer;text-align:center;transition:all 0.12s;position:relative}
+.snd:hover{border-color:#ccc;background:#fafafa}
+.snd.playing{border-color:#111;background:#f8f8f8}
+.snd .icon{font-size:1.6rem;margin-bottom:6px}
+.snd .label{font-size:12px;font-weight:500;color:#111;line-height:1.3}
+.snd .del{position:absolute;top:6px;right:6px;background:none;border:none;color:#ccc;font-size:14px;cursor:pointer;line-height:1;display:none}
+.snd:hover .del{display:block}
+.snd .del:hover{color:#e00}
+.bar{border-top:1px solid #eee;padding:10px 1.5rem;display:flex;align-items:center;gap:10px;position:sticky;bottom:0;background:#fff}
+.bar span{font-size:12px;color:#999;flex:1}
+.stop{padding:6px 14px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:12px;cursor:pointer}
+.stop:hover{background:#f5f5f5}
+.modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:10;align-items:flex-start;justify-content:center;padding-top:80px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:14px;border:1px solid #eee;padding:1.5rem;width:360px;max-width:95vw}
+.modal h2{font-size:15px;font-weight:600;margin-bottom:1rem}
+.modal input[type=text],.modal input[type=password]{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;margin-bottom:10px;outline:none;font-family:inherit}
+.modal input:focus{border-color:#999}
+.modal label{font-size:12px;color:#666;display:block;margin-bottom:4px;margin-top:8px}
+.modal .row{display:flex;gap:8px;margin-top:12px}
+.modal .row button{flex:1;padding:9px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;font-family:inherit}
+.modal .row button:hover{background:#f5f5f5}
+.modal .row button.primary{background:#111;color:#fff;border-color:#111}
+.modal .row button.primary:hover{background:#333}
+.err{font-size:12px;color:#c00;margin-top:-4px;margin-bottom:6px;display:none}
+.rec-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.rec-btn{padding:7px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-family:inherit}
+.rec-btn.recording{background:#fee;border-color:#f99;color:#c00}
+.rec-btn:hover{background:#f5f5f5}
+.tabs{display:flex;gap:4px;margin-bottom:1rem}
+.tab{flex:1;padding:7px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:12px;cursor:pointer;text-align:center;font-family:inherit}
+.tab.active{background:#111;color:#fff;border-color:#111}
+.panel{display:none}
+.panel.active{display:block}
+.close-btn{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1;font-family:inherit}
+.close-btn:hover{color:#111}
+input[type=file]{font-size:13px;margin-bottom:10px;width:100%}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🎵 GameZ</h1>
-  <p>Click a button to play a sound!</p>
-</header>
+<div class="top">
+  <div>
+    <h1>GameZ</h1>
+    <p id="count">10 sounds</p>
+  </div>
+  <button class="upload-btn" onclick="openModal()">+ Upload</button>
+</div>
 
 <div class="grid" id="grid"></div>
 
-<div class="stop-bar">
-  <span id="now-playing">No sound playing</span>
-  <button class="stop-btn" onclick="stopAll()">⏹ Stop</button>
+<div class="bar">
+  <span id="now">Nothing playing</span>
+  <button class="stop" onclick="stopAll()">Stop</button>
+</div>
+
+<div class="modal-bg" id="modal-bg" onclick="bgClick(event)">
+  <div class="modal">
+    <button class="close-btn" onclick="closeModal()">×</button>
+    <h2>Upload a sound</h2>
+
+    <div id="pw-step">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
+      <div class="err" id="pw-err">Wrong password, try again</div>
+      <div class="row">
+        <button onclick="closeModal()">Cancel</button>
+        <button class="primary" onclick="checkPw()">Continue</button>
+      </div>
+    </div>
+
+    <div id="upload-step" style="display:none">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('file',this)">File</button>
+        <button class="tab" onclick="switchTab('record',this)">Record</button>
+      </div>
+
+      <div class="panel active" id="tab-file">
+        <label>Sound name</label>
+        <input type="text" id="file-name" placeholder="e.g. Vine Boom">
+        <label>Emoji</label>
+        <input type="text" id="file-emoji" placeholder="e.g. 💥" maxlength="2">
+        <label>Audio file (mp3, wav, ogg)</label>
+        <input type="file" id="file-input" accept="audio/*">
+        <div class="err" id="file-err">Please fill in all fields and pick a file</div>
+        <div class="row">
+          <button onclick="closeModal()">Cancel</button>
+          <button class="primary" onclick="addFile()">Add sound</button>
+        </div>
+      </div>
+
+      <div class="panel" id="tab-record">
+        <label>Sound name</label>
+        <input type="text" id="rec-name" placeholder="e.g. My scream">
+        <label>Emoji</label>
+        <input type="text" id="rec-emoji" placeholder="e.g. 🎤" maxlength="2">
+        <div class="rec-row">
+          <button class="rec-btn" id="rec-btn" onclick="toggleRec()">⏺ Record</button>
+          <span id="rec-status" style="font-size:12px;color:#888">Not recording</span>
+        </div>
+        <div class="err" id="rec-err">Please record something and add a name</div>
+        <div class="row">
+          <button onclick="closeModal()">Cancel</button>
+          <button class="primary" onclick="addRecording()">Add sound</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-const sounds = [
-  { name: "Aaaaaaah", emoji: "😱", file: "Aaaaaaah.mp3" },
-  { name: "Bruh", emoji: "😐", file: "Bruh.mp3" },
-  { name: "Faaahhhhh", emoji: "😤", file: "Faaahhhhh.mp3" },
-  { name: "I Woke Up In A New Bugatti", emoji: "🚗", file: "I woke up in a new Bugatti.mp3" },
-  { name: "One Two Buckle My Shoe", emoji: "👟", file: "One two buckle my shoe.mp3" },
-  { name: "UWU", emoji: "🥺", file: "UWU.mp3" },
-  { name: "Womp Womp", emoji: "😢", file: "Womp Womp.mp3" },
-  { name: "Your Phone Lingin", emoji: "📱", file: "Your phone lingin.mp3" },
-  { name: "Italian Brainrot Ringtone", emoji: "🍕", file: "italian brainrot ringtone.mp3" },
-  { name: "Please Speed I Need This", emoji: "⚡", file: "please speed i need this.mp3" },
+const PASS = "nechceb5fb75f7";
+const SESSION_KEY = "gamez_session";
+
+const builtins = [
+  {name:"Aaaaaaah",emoji:"😱",file:"Aaaaaaah.mp3",builtin:true},
+  {name:"Bruh",emoji:"😐",file:"Bruh.mp3",builtin:true},
+  {name:"Faaahhhhh",emoji:"😤",file:"Faaahhhhh.mp3",builtin:true},
+  {name:"I Woke Up In A New Bugatti",emoji:"🚗",file:"I woke up in a new Bugatti.mp3",builtin:true},
+  {name:"One Two Buckle My Shoe",emoji:"👟",file:"One two buckle my shoe.mp3",builtin:true},
+  {name:"UWU",emoji:"🥺",file:"UWU.mp3",builtin:true},
+  {name:"Womp Womp",emoji:"😢",file:"Womp Womp.mp3",builtin:true},
+  {name:"Your Phone Lingin",emoji:"📱",file:"Your phone lingin.mp3",builtin:true},
+  {name:"Italian Brainrot Ringtone",emoji:"🍕",file:"italian brainrot ringtone.mp3",builtin:true},
+  {name:"Please Speed I Need This",emoji:"⚡",file:"please speed i need this.mp3",builtin:true},
 ];
+
+let userSounds = [];
+try { userSounds = JSON.parse(localStorage.getItem("gamez_sounds") || "[]"); } catch(e) {}
+
+let sessionId = sessionStorage.getItem(SESSION_KEY);
+if (!sessionId) {
+  sessionId = Math.random().toString(36).slice(2);
+  sessionStorage.setItem(SESSION_KEY, sessionId);
+}
 
 let currentAudio = null;
 let currentBtn = null;
+let mediaRecorder = null;
+let recChunks = [];
+let recBlob = null;
+let recUrl = null;
 
-function playSound(s, btn) {
+function allSounds() { return [...builtins, ...userSounds]; }
+
+function save() { localStorage.setItem("gamez_sounds", JSON.stringify(userSounds)); }
+
+function render() {
+  const sounds = allSounds();
+  document.getElementById("count").textContent = sounds.length + " sounds";
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  sounds.forEach(s => {
+    const div = document.createElement("div");
+    div.className = "snd";
+    div.innerHTML = '<div class="icon">' + (s.emoji || "🔊") + '</div><div class="label">' + s.name + '</div>';
+    div.onclick = function(e) { if (e.target.classList.contains("del")) return; play(s, div); };
+    if (!s.builtin && s.sessionId === sessionId) {
+      const del = document.createElement("button");
+      del.className = "del";
+      del.title = "Delete";
+      del.textContent = "×";
+      del.onclick = function(e) { e.stopPropagation(); deleteSound(s.id); };
+      div.appendChild(del);
+    }
+    grid.appendChild(div);
+  });
+}
+
+function play(s, btn) {
   stopAll();
-  const audio = new Audio(s.file);
+  const audio = new Audio(s.url || s.file);
   currentAudio = audio;
   currentBtn = btn;
   btn.classList.add("playing");
-  document.getElementById("now-playing").textContent = "▶ Playing: " + s.name;
-  audio.play();
-  audio.onended = () => {
+  document.getElementById("now").textContent = "▶ " + s.name;
+  audio.play().catch(function() {});
+  audio.onended = function() {
     btn.classList.remove("playing");
-    document.getElementById("now-playing").textContent = "No sound playing";
+    document.getElementById("now").textContent = "Nothing playing";
     currentAudio = null;
     currentBtn = null;
   };
@@ -72,17 +201,119 @@ function playSound(s, btn) {
 function stopAll() {
   if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
   if (currentBtn) { currentBtn.classList.remove("playing"); currentBtn = null; }
-  document.getElementById("now-playing").textContent = "No sound playing";
+  document.getElementById("now").textContent = "Nothing playing";
 }
 
-const grid = document.getElementById("grid");
-sounds.forEach(s => {
-  const btn = document.createElement("button");
-  btn.className = "snd-btn";
-  btn.innerHTML = `<span class="emoji">${s.emoji}</span><span>${s.name}</span>`;
-  btn.onclick = () => playSound(s, btn);
-  grid.appendChild(btn);
-});
+function deleteSound(id) {
+  userSounds = userSounds.filter(function(s) { return s.id !== id; });
+  save();
+  render();
+}
+
+function openModal() {
+  document.getElementById("modal-bg").classList.add("open");
+  document.getElementById("pw-step").style.display = "";
+  document.getElementById("upload-step").style.display = "none";
+  document.getElementById("pw-input").value = "";
+  document.getElementById("pw-err").style.display = "none";
+  setTimeout(function() { document.getElementById("pw-input").focus(); }, 100);
+}
+
+function closeModal() {
+  document.getElementById("modal-bg").classList.remove("open");
+  stopRec();
+  recBlob = null;
+  recUrl = null;
+  document.getElementById("rec-status").textContent = "Not recording";
+  document.getElementById("rec-btn").textContent = "⏺ Record";
+  document.getElementById("rec-btn").classList.remove("recording");
+  document.getElementById("file-name").value = "";
+  document.getElementById("file-emoji").value = "";
+  document.getElementById("rec-name").value = "";
+  document.getElementById("rec-emoji").value = "";
+}
+
+function bgClick(e) {
+  if (e.target === document.getElementById("modal-bg")) closeModal();
+}
+
+function checkPw() {
+  const val = document.getElementById("pw-input").value;
+  if (val === PASS) {
+    document.getElementById("pw-step").style.display = "none";
+    document.getElementById("upload-step").style.display = "";
+  } else {
+    document.getElementById("pw-err").style.display = "block";
+    document.getElementById("pw-input").value = "";
+    document.getElementById("pw-input").focus();
+  }
+}
+
+function switchTab(tab, btn) {
+  document.querySelectorAll(".tab").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+  btn.classList.add("active");
+  document.getElementById("tab-" + tab).classList.add("active");
+}
+
+function addFile() {
+  const name = document.getElementById("file-name").value.trim();
+  const emoji = document.getElementById("file-emoji").value.trim() || "🔊";
+  const file = document.getElementById("file-input").files[0];
+  if (!name || !file) { document.getElementById("file-err").style.display = "block"; return; }
+  document.getElementById("file-err").style.display = "none";
+  const url = URL.createObjectURL(file);
+  const s = {id: Date.now().toString(), name: name, emoji: emoji, url: url, sessionId: sessionId, builtin: false};
+  userSounds.push(s);
+  save();
+  render();
+  closeModal();
+}
+
+async function toggleRec() {
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop();
+    return;
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+    recChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = function(e) { recChunks.push(e.data); };
+    mediaRecorder.onstop = function() {
+      recBlob = new Blob(recChunks, {type: "audio/webm"});
+      recUrl = URL.createObjectURL(recBlob);
+      stream.getTracks().forEach(function(t) { t.stop(); });
+      document.getElementById("rec-status").textContent = "Recorded! Ready to add.";
+      document.getElementById("rec-btn").textContent = "⏺ Record again";
+      document.getElementById("rec-btn").classList.remove("recording");
+    };
+    mediaRecorder.start();
+    document.getElementById("rec-btn").textContent = "⏹ Stop";
+    document.getElementById("rec-btn").classList.add("recording");
+    document.getElementById("rec-status").textContent = "Recording...";
+  } catch(e) {
+    document.getElementById("rec-status").textContent = "Mic access denied";
+  }
+}
+
+function stopRec() {
+  if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+}
+
+function addRecording() {
+  const name = document.getElementById("rec-name").value.trim();
+  const emoji = document.getElementById("rec-emoji").value.trim() || "🎤";
+  if (!name || !recUrl) { document.getElementById("rec-err").style.display = "block"; return; }
+  document.getElementById("rec-err").style.display = "none";
+  const s = {id: Date.now().toString(), name: name, emoji: emoji, url: recUrl, sessionId: sessionId, builtin: false};
+  userSounds.push(s);
+  save();
+  render();
+  closeModal();
+}
+
+render();
 </script>
 </body>
 </html>
