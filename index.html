@@ -7,117 +7,169 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:system-ui,sans-serif;background:#fff;color:#111;min-height:100vh}
-.top{padding:2rem 2rem 1rem;border-bottom:1px solid #eee;display:flex;align-items:center;justify-content:space-between}
-.top h1{font-size:1.4rem;font-weight:600;letter-spacing:-0.5px}
-.top p{font-size:13px;color:#888;margin-top:2px}
-.upload-btn{padding:8px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;color:#111;font-weight:500}
-.upload-btn:hover{background:#f5f5f5}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:1.5rem}
-.snd{background:#fff;border:1px solid #eee;border-radius:10px;padding:1rem;cursor:pointer;text-align:center;transition:all 0.12s;position:relative}
+.nav{display:flex;gap:2px;padding:1rem 1.5rem 0;border-bottom:1px solid #eee}
+.nav-btn{padding:8px 16px;font-size:13px;font-weight:500;border:none;background:none;cursor:pointer;color:#888;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
+.nav-btn.active{color:#111;border-bottom-color:#111}
+.page{display:none}.page.active{display:block}
+.sb-top{padding:1.2rem 1.5rem 0.8rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sb-top h2{font-size:15px;font-weight:600;margin-right:auto}
+.search-input{padding:7px 12px;border:1px solid #ddd;border-radius:8px;font-size:13px;width:180px;outline:none;font-family:inherit}
+.search-input:focus{border-color:#999}
+.up-btn{padding:7px 14px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;font-weight:500;white-space:nowrap;font-family:inherit}
+.up-btn:hover{background:#f5f5f5}
+.snd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;padding:1rem 1.5rem}
+.snd{background:#fff;border:1px solid #eee;border-radius:10px;padding:0.9rem;cursor:pointer;text-align:center;transition:all 0.1s;position:relative}
 .snd:hover{border-color:#ccc;background:#fafafa}
-.snd.playing{border-color:#111;background:#f8f8f8}
-.snd .icon{font-size:1.6rem;margin-bottom:6px}
-.snd .label{font-size:12px;font-weight:500;color:#111;line-height:1.3}
-.snd .del{position:absolute;top:6px;right:6px;background:none;border:none;color:#ccc;font-size:14px;cursor:pointer;line-height:1;display:none}
-.snd:hover .del{display:block}
-.snd .del:hover{color:#e00}
-.bar{border-top:1px solid #eee;padding:10px 1.5rem;display:flex;align-items:center;gap:10px;position:sticky;bottom:0;background:#fff}
-.bar span{font-size:12px;color:#999;flex:1}
-.stop{padding:6px 14px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:12px;cursor:pointer}
-.stop:hover{background:#f5f5f5}
-.modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.35);z-index:10;align-items:flex-start;justify-content:center;padding-top:80px}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:14px;border:1px solid #eee;padding:1.5rem;width:360px;max-width:95vw}
-.modal h2{font-size:15px;font-weight:600;margin-bottom:1rem}
-.modal input[type=text],.modal input[type=password]{width:100%;padding:9px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;margin-bottom:10px;outline:none;font-family:inherit}
+.snd.playing{border-color:#111}
+.snd .si{font-size:1.5rem;margin-bottom:5px}
+.snd .sl{font-size:11px;font-weight:500;color:#111;line-height:1.3}
+.snd .sd{position:absolute;top:5px;right:5px;background:none;border:none;color:#ddd;font-size:13px;cursor:pointer;display:none}
+.snd:hover .sd{display:block}
+.snd .sd:hover{color:#e00}
+.sb-bar{border-top:1px solid #eee;padding:8px 1.5rem;display:flex;align-items:center;gap:10px;position:sticky;bottom:0;background:#fff}
+.sb-bar span{font-size:12px;color:#999;flex:1}
+.stop-btn{padding:5px 12px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:12px;cursor:pointer;font-family:inherit}
+.no-results{text-align:center;color:#bbb;font-size:13px;padding:2rem;grid-column:1/-1}
+.mbg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);z-index:20;align-items:flex-start;justify-content:center;padding-top:80px}
+.mbg.open{display:flex}
+.modal{background:#fff;border-radius:14px;border:1px solid #eee;padding:1.5rem;width:340px;max-width:95vw}
+.modal h3{font-size:14px;font-weight:600;margin-bottom:1rem}
+.modal label{font-size:11px;color:#888;display:block;margin-bottom:3px;margin-top:8px}
+.modal input[type=text],.modal input[type=password]{width:100%;padding:8px 11px;border:1px solid #ddd;border-radius:7px;font-size:13px;outline:none;font-family:inherit;margin-bottom:6px}
 .modal input:focus{border-color:#999}
-.modal label{font-size:12px;color:#666;display:block;margin-bottom:4px;margin-top:8px}
-.modal .row{display:flex;gap:8px;margin-top:12px}
-.modal .row button{flex:1;padding:9px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;font-family:inherit}
-.modal .row button:hover{background:#f5f5f5}
-.modal .row button.primary{background:#111;color:#fff;border-color:#111}
-.modal .row button.primary:hover{background:#333}
-.err{font-size:12px;color:#c00;margin-top:-4px;margin-bottom:6px;display:none}
-.rec-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.rec-btn{padding:7px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-family:inherit}
-.rec-btn.recording{background:#fee;border-color:#f99;color:#c00}
-.rec-btn:hover{background:#f5f5f5}
-.tabs{display:flex;gap:4px;margin-bottom:1rem}
-.tab{flex:1;padding:7px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:12px;cursor:pointer;text-align:center;font-family:inherit}
-.tab.active{background:#111;color:#fff;border-color:#111}
-.panel{display:none}
-.panel.active{display:block}
-.close-btn{float:right;background:none;border:none;font-size:20px;cursor:pointer;color:#aaa;line-height:1;font-family:inherit}
-.close-btn:hover{color:#111}
-input[type=file]{font-size:13px;margin-bottom:10px;width:100%}
+.mrow{display:flex;gap:8px;margin-top:12px}
+.mrow button{flex:1;padding:8px;border-radius:7px;border:1px solid #ddd;background:#fff;font-size:13px;cursor:pointer;font-family:inherit}
+.mrow button:hover{background:#f5f5f5}
+.mrow .mp{background:#111;color:#fff;border-color:#111}
+.mrow .mp:hover{background:#333}
+.merr{font-size:11px;color:#c00;margin-bottom:6px;display:none}
+.tabs2{display:flex;gap:4px;margin-bottom:1rem}
+.tab2{flex:1;padding:6px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:12px;cursor:pointer;text-align:center;font-family:inherit}
+.tab2.active{background:#111;color:#fff;border-color:#111}
+.panel2{display:none}.panel2.active{display:block}
+.xbtn{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:#aaa;font-family:inherit}
+.xbtn:hover{color:#111}
+.rbtn{padding:6px 12px;border-radius:7px;border:1px solid #ddd;background:#fff;font-size:12px;cursor:pointer;font-family:inherit}
+.rbtn.rec{background:#fee;border-color:#f99;color:#c00}
+.me-wrap{padding:1.2rem 1.5rem}
+.me-top{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;flex-wrap:wrap}
+.me-money{font-size:1.6rem;font-weight:600;color:#111}
+.me-per{font-size:12px;color:#888;margin-top:2px}
+.me-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.stat{background:#f8f8f8;border-radius:8px;padding:10px;text-align:center}
+.stat .sv{font-size:15px;font-weight:600}
+.stat .sl2{font-size:10px;color:#888;margin-top:2px}
+.biz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:1rem}
+.biz{border:1px solid #eee;border-radius:10px;padding:1rem;background:#fff}
+.biz-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.biz-icon{font-size:1.4rem}
+.biz-name{font-size:13px;font-weight:600}
+.biz-lvl{font-size:11px;color:#888}
+.biz-bar-bg{background:#f0f0f0;border-radius:4px;height:5px;margin-bottom:8px;overflow:hidden}
+.biz-bar{background:#111;height:5px;border-radius:4px;transition:width 0.1s}
+.biz-row{display:flex;align-items:center;justify-content:space-between}
+.biz-income{font-size:11px;color:#888}
+.buy-btn{padding:5px 12px;border:1px solid #ddd;border-radius:7px;background:#fff;font-size:11px;cursor:pointer;font-weight:500;font-family:inherit}
+.buy-btn:hover:not(:disabled){background:#f5f5f5}
+.buy-btn:disabled{color:#ccc;cursor:default}
+.upg-section{margin-bottom:1rem}
+.upg-section h4{font-size:11px;font-weight:600;color:#888;margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase}
+.upg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.upg{border:1px solid #eee;border-radius:8px;padding:10px;background:#fff;display:flex;align-items:center;gap:10px}
+.upg-info{flex:1}
+.upg-name{font-size:12px;font-weight:500}
+.upg-desc{font-size:11px;color:#888;margin-top:1px}
+.upg-btn{padding:4px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;font-size:11px;cursor:pointer;white-space:nowrap;font-family:inherit}
+.upg-btn:hover:not(:disabled){background:#f5f5f5}
+.upg-btn.owned{background:#f0f0f0;color:#999;cursor:default;border-color:#eee}
+.click-btn{padding:10px 24px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:1.1rem;cursor:pointer;font-family:inherit;margin-left:auto}
+.click-btn:hover{background:#f5f5f5}
+.click-btn:active{transform:scale(0.97)}
+.prest-btn{padding:8px 16px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:13px;cursor:pointer;font-family:inherit}
+.prest-btn:hover{background:#f5f5f5}
+.me-log{font-size:11px;color:#aaa;border-top:1px solid #eee;padding-top:8px;margin-top:4px}
 </style>
 </head>
 <body>
 
-<div class="top">
-  <div>
-    <h1>GameZ</h1>
-    <p id="count">10 sounds</p>
+<div class="nav">
+  <button class="nav-btn active" onclick="showPage('sounds',this)">Sounds</button>
+  <button class="nav-btn" onclick="showPage('game',this)">Money Empire</button>
+</div>
+
+<div class="page active" id="page-sounds">
+  <div class="sb-top">
+    <h2 id="snd-count">10 sounds</h2>
+    <input class="search-input" type="text" placeholder="Search sounds..." oninput="filterSounds(this.value)">
+    <button class="up-btn" onclick="openModal()">+ Upload</button>
   </div>
-  <button class="upload-btn" onclick="openModal()">+ Upload</button>
+  <div class="snd-grid" id="snd-grid"></div>
+  <div class="sb-bar">
+    <span id="now-playing">Nothing playing</span>
+    <button class="stop-btn" onclick="stopAll()">Stop</button>
+  </div>
 </div>
 
-<div class="grid" id="grid"></div>
-
-<div class="bar">
-  <span id="now">Nothing playing</span>
-  <button class="stop" onclick="stopAll()">Stop</button>
+<div class="page" id="page-game">
+  <div class="me-wrap">
+    <div class="me-top">
+      <div>
+        <div class="me-money" id="g-money">$0.00</div>
+        <div class="me-per" id="g-per">$0.00/sec</div>
+      </div>
+      <button class="click-btn" onclick="clickMoney()">💰 Click!</button>
+      <button class="prest-btn" id="prest-btn" style="display:none" onclick="prestige()">⭐ Prestige</button>
+    </div>
+    <div class="me-stats">
+      <div class="stat"><div class="sv" id="g-total">$0</div><div class="sl2">Total earned</div></div>
+      <div class="stat"><div class="sv" id="g-clicks">0</div><div class="sl2">Clicks</div></div>
+      <div class="stat"><div class="sv" id="g-prestige">0</div><div class="sl2">Prestiges</div></div>
+    </div>
+    <div class="biz-grid" id="biz-grid"></div>
+    <div class="upg-section">
+      <h4>Upgrades</h4>
+      <div class="upg-grid" id="upg-grid"></div>
+    </div>
+    <div class="me-log" id="me-log"></div>
+  </div>
 </div>
 
-<div class="modal-bg" id="modal-bg" onclick="bgClick(event)">
+<div class="mbg" id="mbg" onclick="bgClick(event)">
   <div class="modal">
-    <button class="close-btn" onclick="closeModal()">×</button>
-    <h2>Upload a sound</h2>
-
+    <button class="xbtn" onclick="closeModal()">×</button>
+    <h3>Upload a sound</h3>
     <div id="pw-step">
       <label>Password</label>
-      <input type="password" id="pw-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
-      <div class="err" id="pw-err">Wrong password, try again</div>
-      <div class="row">
-        <button onclick="closeModal()">Cancel</button>
-        <button class="primary" onclick="checkPw()">Continue</button>
-      </div>
+      <input type="password" id="pw-in" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPw()">
+      <div class="merr" id="pw-err">Wrong password</div>
+      <div class="mrow"><button onclick="closeModal()">Cancel</button><button class="mp" onclick="checkPw()">Continue</button></div>
     </div>
-
-    <div id="upload-step" style="display:none">
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('file',this)">File</button>
-        <button class="tab" onclick="switchTab('record',this)">Record</button>
+    <div id="up-step" style="display:none">
+      <div class="tabs2">
+        <button class="tab2 active" onclick="swTab('file',this)">File</button>
+        <button class="tab2" onclick="swTab('record',this)">Record</button>
       </div>
-
-      <div class="panel active" id="tab-file">
+      <div class="panel2 active" id="tab-file">
         <label>Sound name</label>
-        <input type="text" id="file-name" placeholder="e.g. Vine Boom">
+        <input type="text" id="fn" placeholder="e.g. Vine Boom">
         <label>Emoji</label>
-        <input type="text" id="file-emoji" placeholder="e.g. 💥" maxlength="2">
+        <input type="text" id="fe" placeholder="e.g. 💥" maxlength="2">
         <label>Audio file (mp3, wav, ogg)</label>
-        <input type="file" id="file-input" accept="audio/*">
-        <div class="err" id="file-err">Please fill in all fields and pick a file</div>
-        <div class="row">
-          <button onclick="closeModal()">Cancel</button>
-          <button class="primary" onclick="addFile()">Add sound</button>
-        </div>
+        <input type="file" id="fi" accept="audio/*" style="font-size:12px;width:100%;margin-bottom:8px">
+        <div class="merr" id="ferr">Please fill all fields and pick a file</div>
+        <div class="mrow"><button onclick="closeModal()">Cancel</button><button class="mp" onclick="addFile()">Add sound</button></div>
       </div>
-
-      <div class="panel" id="tab-record">
+      <div class="panel2" id="tab-record">
         <label>Sound name</label>
-        <input type="text" id="rec-name" placeholder="e.g. My scream">
+        <input type="text" id="rn" placeholder="e.g. My scream">
         <label>Emoji</label>
-        <input type="text" id="rec-emoji" placeholder="e.g. 🎤" maxlength="2">
-        <div class="rec-row">
-          <button class="rec-btn" id="rec-btn" onclick="toggleRec()">⏺ Record</button>
-          <span id="rec-status" style="font-size:12px;color:#888">Not recording</span>
+        <input type="text" id="re" placeholder="e.g. 🎤" maxlength="2">
+        <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+          <button class="rbtn" id="rbtn" onclick="toggleRec()">⏺ Record</button>
+          <span id="rst" style="font-size:12px;color:#888">Not recording</span>
         </div>
-        <div class="err" id="rec-err">Please record something and add a name</div>
-        <div class="row">
-          <button onclick="closeModal()">Cancel</button>
-          <button class="primary" onclick="addRecording()">Add sound</button>
-        </div>
+        <div class="merr" id="rerr">Please record something and add a name</div>
+        <div class="mrow"><button onclick="closeModal()">Cancel</button><button class="mp" onclick="addRec()">Add sound</button></div>
       </div>
     </div>
   </div>
@@ -125,7 +177,9 @@ input[type=file]{font-size:13px;margin-bottom:10px;width:100%}
 
 <script>
 const PASS = "nechceb5fb75f7";
-const SESSION_KEY = "gamez_session";
+const SK = "gamez_session";
+let sid = sessionStorage.getItem(SK);
+if (!sid) { sid = Math.random().toString(36).slice(2); sessionStorage.setItem(SK, sid); }
 
 const builtins = [
   {name:"Aaaaaaah",emoji:"😱",file:"Aaaaaaah.mp3",builtin:true},
@@ -142,178 +196,344 @@ const builtins = [
 
 let userSounds = [];
 try { userSounds = JSON.parse(localStorage.getItem("gamez_sounds") || "[]"); } catch(e) {}
+let curAudio = null, curBtn = null, recMR = null, recChunks = [], recUrl = null;
 
-let sessionId = sessionStorage.getItem(SESSION_KEY);
-if (!sessionId) {
-  sessionId = Math.random().toString(36).slice(2);
-  sessionStorage.setItem(SESSION_KEY, sessionId);
+function showPage(id, btn) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("page-" + id).classList.add("active");
+  btn.classList.add("active");
 }
 
-let currentAudio = null;
-let currentBtn = null;
-let mediaRecorder = null;
-let recChunks = [];
-let recBlob = null;
-let recUrl = null;
-
 function allSounds() { return [...builtins, ...userSounds]; }
+function saveSounds() { localStorage.setItem("gamez_sounds", JSON.stringify(userSounds)); }
 
-function save() { localStorage.setItem("gamez_sounds", JSON.stringify(userSounds)); }
-
-function render() {
-  const sounds = allSounds();
-  document.getElementById("count").textContent = sounds.length + " sounds";
-  const grid = document.getElementById("grid");
+function renderSounds(q) {
+  q = q || "";
+  const all = allSounds().filter(s => s.name.toLowerCase().includes(q.toLowerCase()));
+  document.getElementById("snd-count").textContent = allSounds().length + " sounds";
+  const grid = document.getElementById("snd-grid");
   grid.innerHTML = "";
-  sounds.forEach(s => {
-    const div = document.createElement("div");
-    div.className = "snd";
-    div.innerHTML = '<div class="icon">' + (s.emoji || "🔊") + '</div><div class="label">' + s.name + '</div>';
-    div.onclick = function(e) { if (e.target.classList.contains("del")) return; play(s, div); };
-    if (!s.builtin && s.sessionId === sessionId) {
-      const del = document.createElement("button");
-      del.className = "del";
-      del.title = "Delete";
-      del.textContent = "×";
-      del.onclick = function(e) { e.stopPropagation(); deleteSound(s.id); };
-      div.appendChild(del);
+  if (!all.length) { grid.innerHTML = '<div class="no-results">No sounds found</div>'; return; }
+  all.forEach(function(s) {
+    const d = document.createElement("div");
+    d.className = "snd";
+    d.innerHTML = '<div class="si">' + (s.emoji || "🔊") + '</div><div class="sl">' + s.name + '</div>';
+    d.onclick = function(e) { if (e.target.classList.contains("sd")) return; playSound(s, d); };
+    if (!s.builtin && s.sessionId === sid) {
+      const x = document.createElement("button");
+      x.className = "sd"; x.textContent = "×"; x.title = "Delete";
+      x.onclick = function(e) {
+        e.stopPropagation();
+        userSounds = userSounds.filter(function(u) { return u.id !== s.id; });
+        saveSounds(); renderSounds(q);
+      };
+      d.appendChild(x);
     }
-    grid.appendChild(div);
+    grid.appendChild(d);
   });
 }
 
-function play(s, btn) {
+function filterSounds(q) { renderSounds(q); }
+
+function playSound(s, btn) {
   stopAll();
-  const audio = new Audio(s.url || s.file);
-  currentAudio = audio;
-  currentBtn = btn;
+  const a = new Audio(s.url || s.file);
+  curAudio = a; curBtn = btn;
   btn.classList.add("playing");
-  document.getElementById("now").textContent = "▶ " + s.name;
-  audio.play().catch(function() {});
-  audio.onended = function() {
+  document.getElementById("now-playing").textContent = "▶ " + s.name;
+  a.play().catch(function() {});
+  a.onended = function() {
     btn.classList.remove("playing");
-    document.getElementById("now").textContent = "Nothing playing";
-    currentAudio = null;
-    currentBtn = null;
+    document.getElementById("now-playing").textContent = "Nothing playing";
+    curAudio = null; curBtn = null;
   };
 }
 
 function stopAll() {
-  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
-  if (currentBtn) { currentBtn.classList.remove("playing"); currentBtn = null; }
-  document.getElementById("now").textContent = "Nothing playing";
-}
-
-function deleteSound(id) {
-  userSounds = userSounds.filter(function(s) { return s.id !== id; });
-  save();
-  render();
+  if (curAudio) { curAudio.pause(); curAudio.currentTime = 0; curAudio = null; }
+  if (curBtn) { curBtn.classList.remove("playing"); curBtn = null; }
+  document.getElementById("now-playing").textContent = "Nothing playing";
 }
 
 function openModal() {
-  document.getElementById("modal-bg").classList.add("open");
+  document.getElementById("mbg").classList.add("open");
   document.getElementById("pw-step").style.display = "";
-  document.getElementById("upload-step").style.display = "none";
-  document.getElementById("pw-input").value = "";
+  document.getElementById("up-step").style.display = "none";
+  document.getElementById("pw-in").value = "";
   document.getElementById("pw-err").style.display = "none";
-  setTimeout(function() { document.getElementById("pw-input").focus(); }, 100);
+  setTimeout(function() { document.getElementById("pw-in").focus(); }, 80);
 }
 
 function closeModal() {
-  document.getElementById("modal-bg").classList.remove("open");
-  stopRec();
-  recBlob = null;
+  document.getElementById("mbg").classList.remove("open");
+  if (recMR && recMR.state === "recording") recMR.stop();
   recUrl = null;
-  document.getElementById("rec-status").textContent = "Not recording";
-  document.getElementById("rec-btn").textContent = "⏺ Record";
-  document.getElementById("rec-btn").classList.remove("recording");
-  document.getElementById("file-name").value = "";
-  document.getElementById("file-emoji").value = "";
-  document.getElementById("rec-name").value = "";
-  document.getElementById("rec-emoji").value = "";
+  document.getElementById("rst").textContent = "Not recording";
+  document.getElementById("rbtn").textContent = "⏺ Record";
+  document.getElementById("rbtn").classList.remove("rec");
+  ["fn","fe","rn","re"].forEach(function(id) { document.getElementById(id).value = ""; });
 }
 
-function bgClick(e) {
-  if (e.target === document.getElementById("modal-bg")) closeModal();
-}
+function bgClick(e) { if (e.target === document.getElementById("mbg")) closeModal(); }
 
 function checkPw() {
-  const val = document.getElementById("pw-input").value;
-  if (val === PASS) {
+  if (document.getElementById("pw-in").value === PASS) {
     document.getElementById("pw-step").style.display = "none";
-    document.getElementById("upload-step").style.display = "";
+    document.getElementById("up-step").style.display = "";
   } else {
     document.getElementById("pw-err").style.display = "block";
-    document.getElementById("pw-input").value = "";
-    document.getElementById("pw-input").focus();
+    document.getElementById("pw-in").value = "";
+    document.getElementById("pw-in").focus();
   }
 }
 
-function switchTab(tab, btn) {
-  document.querySelectorAll(".tab").forEach(function(b) { b.classList.remove("active"); });
-  document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+function swTab(t, btn) {
+  document.querySelectorAll(".tab2").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelectorAll(".panel2").forEach(function(p) { p.classList.remove("active"); });
   btn.classList.add("active");
-  document.getElementById("tab-" + tab).classList.add("active");
+  document.getElementById("tab-" + t).classList.add("active");
 }
 
 function addFile() {
-  const name = document.getElementById("file-name").value.trim();
-  const emoji = document.getElementById("file-emoji").value.trim() || "🔊";
-  const file = document.getElementById("file-input").files[0];
-  if (!name || !file) { document.getElementById("file-err").style.display = "block"; return; }
-  document.getElementById("file-err").style.display = "none";
-  const url = URL.createObjectURL(file);
-  const s = {id: Date.now().toString(), name: name, emoji: emoji, url: url, sessionId: sessionId, builtin: false};
+  const n = document.getElementById("fn").value.trim();
+  const e = document.getElementById("fe").value.trim() || "🔊";
+  const f = document.getElementById("fi").files[0];
+  if (!n || !f) { document.getElementById("ferr").style.display = "block"; return; }
+  document.getElementById("ferr").style.display = "none";
+  const s = {id: Date.now() + "", name: n, emoji: e, url: URL.createObjectURL(f), sessionId: sid, builtin: false};
   userSounds.push(s);
-  save();
-  render();
-  closeModal();
+  saveSounds(); renderSounds(); closeModal();
 }
 
 async function toggleRec() {
-  if (mediaRecorder && mediaRecorder.state === "recording") {
-    mediaRecorder.stop();
-    return;
-  }
+  if (recMR && recMR.state === "recording") { recMR.stop(); return; }
   try {
     const stream = await navigator.mediaDevices.getUserMedia({audio: true});
     recChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = function(e) { recChunks.push(e.data); };
-    mediaRecorder.onstop = function() {
-      recBlob = new Blob(recChunks, {type: "audio/webm"});
-      recUrl = URL.createObjectURL(recBlob);
+    recMR = new MediaRecorder(stream);
+    recMR.ondataavailable = function(e) { recChunks.push(e.data); };
+    recMR.onstop = function() {
+      const blob = new Blob(recChunks, {type: "audio/webm"});
+      recUrl = URL.createObjectURL(blob);
       stream.getTracks().forEach(function(t) { t.stop(); });
-      document.getElementById("rec-status").textContent = "Recorded! Ready to add.";
-      document.getElementById("rec-btn").textContent = "⏺ Record again";
-      document.getElementById("rec-btn").classList.remove("recording");
+      document.getElementById("rst").textContent = "Ready to add!";
+      document.getElementById("rbtn").textContent = "⏺ Record again";
+      document.getElementById("rbtn").classList.remove("rec");
     };
-    mediaRecorder.start();
-    document.getElementById("rec-btn").textContent = "⏹ Stop";
-    document.getElementById("rec-btn").classList.add("recording");
-    document.getElementById("rec-status").textContent = "Recording...";
-  } catch(e) {
-    document.getElementById("rec-status").textContent = "Mic access denied";
-  }
+    recMR.start();
+    document.getElementById("rbtn").textContent = "⏹ Stop";
+    document.getElementById("rbtn").classList.add("rec");
+    document.getElementById("rst").textContent = "Recording...";
+  } catch(e) { document.getElementById("rst").textContent = "Mic access denied"; }
 }
 
-function stopRec() {
-  if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-}
-
-function addRecording() {
-  const name = document.getElementById("rec-name").value.trim();
-  const emoji = document.getElementById("rec-emoji").value.trim() || "🎤";
-  if (!name || !recUrl) { document.getElementById("rec-err").style.display = "block"; return; }
-  document.getElementById("rec-err").style.display = "none";
-  const s = {id: Date.now().toString(), name: name, emoji: emoji, url: recUrl, sessionId: sessionId, builtin: false};
+function addRec() {
+  const n = document.getElementById("rn").value.trim();
+  const e = document.getElementById("re").value.trim() || "🎤";
+  if (!n || !recUrl) { document.getElementById("rerr").style.display = "block"; return; }
+  document.getElementById("rerr").style.display = "none";
+  const s = {id: Date.now() + "", name: n, emoji: e, url: recUrl, sessionId: sid, builtin: false};
   userSounds.push(s);
-  save();
-  render();
-  closeModal();
+  saveSounds(); renderSounds(); closeModal();
 }
 
-render();
+/* MONEY EMPIRE */
+const SAVE_KEY = "gamez_empire";
+let G = {money:0,totalEarned:0,clicks:0,prestige:0,clickPower:1,businesses:[],upgrades:[],log:[]};
+
+const BIZ_DEF = [
+  {id:"lemonade",name:"Lemonade Stand",emoji:"🍋",base:1,baseIncome:0.1,baseCost:15,multi:1.07},
+  {id:"newspaper",name:"Newspaper",emoji:"📰",base:0,baseIncome:0.5,baseCost:80,multi:1.07},
+  {id:"bakery",name:"Bakery",emoji:"🥐",base:0,baseIncome:2,baseCost:400,multi:1.07},
+  {id:"carwash",name:"Car Wash",emoji:"🚗",base:0,baseIncome:10,baseCost:2000,multi:1.07},
+  {id:"restaurant",name:"Restaurant",emoji:"🍔",base:0,baseIncome:50,baseCost:12000,multi:1.07},
+  {id:"factory",name:"Factory",emoji:"🏭",base:0,baseIncome:200,baseCost:75000,multi:1.07},
+  {id:"bank",name:"Bank",emoji:"🏦",base:0,baseIncome:1000,baseCost:500000,multi:1.07},
+  {id:"oilwell",name:"Oil Well",emoji:"🛢️",base:0,baseIncome:5000,baseCost:3000000,multi:1.07},
+];
+
+const UPG_DEF = [
+  {id:"click2",name:"Better hands",desc:"2x click power",cost:50,effect:"clickx2"},
+  {id:"click3",name:"Robot hands",desc:"5x click power",cost:500,effect:"clickx5"},
+  {id:"lemon2",name:"Bigger lemons",desc:"2x lemonade income",cost:200,effect:"bizx_lemonade"},
+  {id:"news2",name:"Faster print",desc:"2x newspaper income",cost:1000,effect:"bizx_newspaper"},
+  {id:"bake2",name:"Better oven",desc:"2x bakery income",cost:5000,effect:"bizx_bakery"},
+  {id:"car2",name:"Power washer",desc:"2x car wash income",cost:30000,effect:"bizx_carwash"},
+  {id:"rest2",name:"Michelin star",desc:"2x restaurant income",cost:200000,effect:"bizx_restaurant"},
+  {id:"fact2",name:"Automation",desc:"2x factory income",cost:1000000,effect:"bizx_factory"},
+];
+
+function loadGame() {
+  try { const s = localStorage.getItem(SAVE_KEY); if (s) G = JSON.parse(s); } catch(e) {}
+  if (!G.businesses || G.businesses.length !== BIZ_DEF.length) {
+    G.businesses = BIZ_DEF.map(function(b) { return {id:b.id,count:b.base,progress:0}; });
+  }
+  if (!G.upgrades) G.upgrades = [];
+  if (!G.log) G.log = [];
+}
+
+function saveGame() { localStorage.setItem(SAVE_KEY, JSON.stringify(G)); }
+function bizDef(id) { return BIZ_DEF.find(function(b) { return b.id === id; }); }
+function bizState(id) { return G.businesses.find(function(b) { return b.id === id; }); }
+
+function bizCost(id) {
+  const d = bizDef(id), s = bizState(id);
+  return Math.floor(d.baseCost * Math.pow(d.multi, s.count));
+}
+
+function incomePerSec() {
+  let total = 0;
+  G.businesses.forEach(function(s) {
+    if (s.count === 0) return;
+    const d = bizDef(s.id);
+    let inc = d.baseIncome * s.count;
+    const upg = UPG_DEF.find(function(u) { return u.effect === "bizx_" + s.id; });
+    if (upg && G.upgrades.includes(upg.id)) inc *= 2;
+    total += inc;
+  });
+  return total * (G.prestige > 0 ? 1 + G.prestige * 0.5 : 1);
+}
+
+function getClickPower() {
+  let p = 1;
+  if (G.upgrades.includes("click3")) p = 5;
+  else if (G.upgrades.includes("click2")) p = 2;
+  return p * (G.prestige > 0 ? 1 + G.prestige * 0.5 : 1);
+}
+
+function fmt(n) {
+  if (n >= 1e12) return "$" + (n/1e12).toFixed(2) + "T";
+  if (n >= 1e9) return "$" + (n/1e9).toFixed(2) + "B";
+  if (n >= 1e6) return "$" + (n/1e6).toFixed(2) + "M";
+  if (n >= 1e3) return "$" + (n/1e3).toFixed(2) + "K";
+  return "$" + n.toFixed(2);
+}
+
+function clickMoney() {
+  const power = getClickPower();
+  G.money += power; G.totalEarned += power; G.clicks++;
+  updateUI();
+}
+
+function buyBiz(id) {
+  const cost = bizCost(id);
+  if (G.money < cost) return;
+  G.money -= cost;
+  bizState(id).count++;
+  addLog("Bought " + bizDef(id).name);
+  saveGame(); updateUI(); renderBiz();
+}
+
+function buyUpgrade(id) {
+  const u = UPG_DEF.find(function(u) { return u.id === id; });
+  if (!u || G.money < u.cost || G.upgrades.includes(id)) return;
+  G.money -= u.cost;
+  G.upgrades.push(id);
+  addLog("Unlocked: " + u.name);
+  saveGame(); updateUI(); renderUpgrades();
+}
+
+function prestige() {
+  if (G.totalEarned < 1e6) return;
+  G.prestige++;
+  G.money = 0; G.totalEarned = 0; G.clicks = 0;
+  G.businesses = BIZ_DEF.map(function(b) { return {id:b.id,count:b.base,progress:0}; });
+  G.upgrades = [];
+  addLog("Prestiged! +" + (G.prestige * 50) + "% bonus active");
+  saveGame(); updateUI(); renderBiz(); renderUpgrades();
+}
+
+function addLog(msg) {
+  G.log.unshift(msg);
+  if (G.log.length > 5) G.log.pop();
+  document.getElementById("me-log").textContent = G.log.join(" · ");
+}
+
+function updateUI() {
+  const ips = incomePerSec();
+  const cp = getClickPower();
+  document.getElementById("g-money").textContent = fmt(G.money);
+  document.getElementById("g-per").textContent = fmt(ips) + "/sec · " + fmt(cp) + " per click";
+  document.getElementById("g-total").textContent = fmt(G.totalEarned);
+  document.getElementById("g-clicks").textContent = G.clicks.toLocaleString();
+  document.getElementById("g-prestige").textContent = G.prestige;
+  document.getElementById("prest-btn").style.display = G.totalEarned >= 1e6 ? "" : "none";
+  document.querySelectorAll(".buy-btn").forEach(function(btn) {
+    const id = btn.dataset.id;
+    if (id) { btn.disabled = G.money < bizCost(id); btn.textContent = fmt(bizCost(id)); }
+  });
+  document.querySelectorAll(".upg-btn").forEach(function(btn) {
+    const id = btn.dataset.id;
+    if (id && !G.upgrades.includes(id)) {
+      const u = UPG_DEF.find(function(u) { return u.id === id; });
+      if (u) btn.disabled = G.money < u.cost;
+    }
+  });
+}
+
+function renderBiz() {
+  const grid = document.getElementById("biz-grid");
+  grid.innerHTML = "";
+  BIZ_DEF.forEach(function(d) {
+    const s = bizState(d.id);
+    const cost = bizCost(d.id);
+    const div = document.createElement("div");
+    div.className = "biz";
+    const prog = Math.min((s.progress || 0) * 100, 100).toFixed(1);
+    div.innerHTML =
+      '<div class="biz-top"><span class="biz-icon">' + d.emoji + '</span>' +
+      '<div><div class="biz-name">' + d.name + '</div><div class="biz-lvl">Level ' + s.count + '</div></div></div>' +
+      '<div class="biz-bar-bg"><div class="biz-bar" id="bar-' + d.id + '" style="width:' + prog + '%"></div></div>' +
+      '<div class="biz-row"><span class="biz-income">' + fmt(d.baseIncome * Math.max(s.count, 1)) + '/s</span>' +
+      '<button class="buy-btn" data-id="' + d.id + '" onclick="buyBiz(\'' + d.id + '\')" ' + (G.money >= cost ? "" : "disabled") + '>' + fmt(cost) + '</button></div>';
+    grid.appendChild(div);
+  });
+}
+
+function renderUpgrades() {
+  const grid = document.getElementById("upg-grid");
+  grid.innerHTML = "";
+  UPG_DEF.forEach(function(u) {
+    const owned = G.upgrades.includes(u.id);
+    const div = document.createElement("div");
+    div.className = "upg";
+    div.innerHTML =
+      '<div class="upg-info"><div class="upg-name">' + u.name + '</div>' +
+      '<div class="upg-desc">' + u.desc + ' · ' + fmt(u.cost) + '</div></div>' +
+      '<button class="upg-btn ' + (owned ? "owned" : "") + '" data-id="' + u.id + '" ' +
+      (owned ? 'disabled' : 'onclick="buyUpgrade(\'' + u.id + '\')"') + '>' +
+      (owned ? "✓ Owned" : "Buy") + '</button>';
+    grid.appendChild(div);
+  });
+}
+
+let lastTick = Date.now();
+function gameTick() {
+  const now = Date.now();
+  const dt = (now - lastTick) / 1000;
+  lastTick = now;
+  const ips = incomePerSec();
+  if (ips > 0) { G.money += ips * dt; G.totalEarned += ips * dt; }
+  G.businesses.forEach(function(s) {
+    if (s.count === 0) return;
+    s.progress = (s.progress || 0) + dt / 10;
+    if (s.progress >= 1) s.progress = 0;
+    const bar = document.getElementById("bar-" + s.id);
+    if (bar) bar.style.width = (s.progress * 100).toFixed(1) + "%";
+  });
+  if (Math.round(now / 3000) !== Math.round((now - dt * 1000) / 3000)) saveGame();
+  updateUI();
+  requestAnimationFrame(gameTick);
+}
+
+loadGame();
+renderSounds();
+renderBiz();
+renderUpgrades();
+updateUI();
+addLog("Welcome to Money Empire!");
+requestAnimationFrame(gameTick);
 </script>
 </body>
 </html>
