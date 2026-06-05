@@ -1,20 +1,88 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Game</title>
-    <style>
-      body { background: black; margin: 0; }
-      canvas { display: block; margin: auto; }
-    </style>
-  </head>
-  <body>
-    <canvas id="game" width="480" height="320"></canvas>
-    <script>
-      const canvas = document.getElementById("game");
-      const ctx = canvas.getContext("2d");
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GameZ Sound Board</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #0f0f0f; color: white; min-height: 100vh; }
+  header { padding: 2rem 1.5rem 1rem; text-align: center; }
+  header h1 { font-size: 2.5rem; color: #a78bfa; }
+  header p { color: #888; margin-top: 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; padding: 1.5rem; }
+  .snd-btn { background: #1a1a2e; border: 2px solid #2d2d4e; border-radius: 12px; color: white; padding: 1.2rem 1rem; font-size: 14px; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 8px; min-height: 90px; justify-content: center; }
+  .snd-btn:hover { background: #2d2d4e; border-color: #a78bfa; transform: translateY(-2px); }
+  .snd-btn:active { transform: scale(0.96); }
+  .snd-btn.playing { background: #3b1f6e; border-color: #a78bfa; box-shadow: 0 0 12px #a78bfa55; }
+  .snd-btn .emoji { font-size: 26px; }
+  .stop-bar { position: sticky; bottom: 0; background: #0f0f0f; border-top: 1px solid #222; padding: 12px 1.5rem; display: flex; align-items: center; gap: 12px; }
+  .stop-bar span { font-size: 13px; color: #888; flex: 1; }
+  .stop-btn { padding: 8px 20px; border-radius: 8px; border: 1px solid #444; background: #1a1a1a; color: white; font-size: 13px; cursor: pointer; }
+  .stop-btn:hover { background: #2a2a2a; }
+</style>
+</head>
+<body>
 
-      ctx.fillStyle = "red";
-      ctx.fillRect(50, 50, 100, 100);
-    </script>
-  </body>
+<header>
+  <h1>🎵 GameZ</h1>
+  <p>Click a button to play a sound!</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="stop-bar">
+  <span id="now-playing">No sound playing</span>
+  <button class="stop-btn" onclick="stopAll()">⏹ Stop</button>
+</div>
+
+<script>
+const sounds = [
+  { name: "Aaaaaaah", emoji: "😱", file: "Aaaaaaah.mp3" },
+  { name: "Bruh", emoji: "😐", file: "Bruh.mp3" },
+  { name: "Faaahhhhh", emoji: "😤", file: "Faaahhhhh.mp3" },
+  { name: "I Woke Up In A New Bugatti", emoji: "🚗", file: "I woke up in a new Bugatti.mp3" },
+  { name: "One Two Buckle My Shoe", emoji: "👟", file: "One two buckle my shoe.mp3" },
+  { name: "UWU", emoji: "🥺", file: "UWU.mp3" },
+  { name: "Womp Womp", emoji: "😢", file: "Womp Womp.mp3" },
+  { name: "Your Phone Lingin", emoji: "📱", file: "Your phone lingin.mp3" },
+  { name: "Italian Brainrot Ringtone", emoji: "🍕", file: "italian brainrot ringtone.mp3" },
+  { name: "Please Speed I Need This", emoji: "⚡", file: "please speed i need this.mp3" },
+];
+
+let currentAudio = null;
+let currentBtn = null;
+
+function playSound(s, btn) {
+  stopAll();
+  const audio = new Audio(s.file);
+  currentAudio = audio;
+  currentBtn = btn;
+  btn.classList.add("playing");
+  document.getElementById("now-playing").textContent = "▶ Playing: " + s.name;
+  audio.play();
+  audio.onended = () => {
+    btn.classList.remove("playing");
+    document.getElementById("now-playing").textContent = "No sound playing";
+    currentAudio = null;
+    currentBtn = null;
+  };
+}
+
+function stopAll() {
+  if (currentAudio) { currentAudio.pause(); currentAudio.currentTime = 0; currentAudio = null; }
+  if (currentBtn) { currentBtn.classList.remove("playing"); currentBtn = null; }
+  document.getElementById("now-playing").textContent = "No sound playing";
+}
+
+const grid = document.getElementById("grid");
+sounds.forEach(s => {
+  const btn = document.createElement("button");
+  btn.className = "snd-btn";
+  btn.innerHTML = `<span class="emoji">${s.emoji}</span><span>${s.name}</span>`;
+  btn.onclick = () => playSound(s, btn);
+  grid.appendChild(btn);
+});
+</script>
+</body>
 </html>
